@@ -23,6 +23,29 @@ var dom_md = ebi('mt');
     dom_nav.innerHTML = nav.join('');
 })();
 
+var zoom_increase, zoom_decrease;
+
+(function () {
+    var zoom_min = .5, zoom_max = 3, zoom_step = .2;
+
+    function set_zoom(mde, delta) {
+        var zoom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1;
+        zoom = Math.max(zoom_min, Math.min(zoom_max, zoom + delta));
+        document.documentElement.style.setProperty('--zoom-scale', zoom);
+        setTimeout(function () {
+            mde.codemirror.refresh();
+        }, 0);
+    }
+
+    zoom_increase = function (mde) {
+        set_zoom(mde, zoom_step);
+    };
+
+    zoom_decrease = function (mde) {
+        set_zoom(mde, -zoom_step);
+    };
+})();
+
 var mde = (function () {
     var tbar = [
         {
@@ -35,6 +58,16 @@ var mde = (function () {
             title: "save",
             className: "fa fa-save",
             action: save
+        }, {
+            name: "font-smaller",
+            title: "Zoom Decrease",
+            text: "A−",
+            action: zoom_decrease
+        }, {
+            name: "font-bigger",
+            title: "Zoom Increase",
+            text: "A+",
+            action: zoom_increase
         }, '|',
         'bold', 'italic', 'strikethrough', 'heading', '|',
         'code', 'quote', 'unordered-list', 'ordered-list', 'clean-block', '|',

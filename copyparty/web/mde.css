@@ -154,3 +154,9 @@ html.z .editor-toolbar::before {
 html.z .mdo {
 	background: #1c1c1c;
 }
+
+/* zoom adjustment */
+.EasyMDEContainer .CodeMirror,
+.mdo {
+	zoom: var(--zoom-scale, 1);
+}

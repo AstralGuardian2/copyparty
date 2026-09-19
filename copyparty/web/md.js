@@ -526,4 +526,24 @@ if (sread('hidenav') == 1)
 if (window.tt && tt.init)
     tt.init();
 
+// page zoom
+(function () {
+    var step = 0.1, min = 0.6, max = 2;
+
+    function set_zoom(delta) {
+        var zoom = parseFloat(document.documentElement.style.zoom) || 1;
+        zoom = Math.min(max, Math.max(min, zoom + delta));
+        document.documentElement.style.zoom = zoom;
+        setTimeout(redraw);
+    }
+
+    ebi('zoom_decrease').onclick = function () {
+        set_zoom(-step);
+    };
+
+    ebi('zoom_increase').onclick = function () {
+        set_zoom(step);
+    };
+})();
+
 J_MD = 2;
