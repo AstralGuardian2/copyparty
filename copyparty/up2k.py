@@ -909,7 +909,7 @@ class Up2k(object):
 
             with self.mutex:
                 if gid != self.gid:
-                    return False
+                    return
 
                 if self.pp:
                     continue
@@ -1100,7 +1100,7 @@ class Up2k(object):
                 cur.execute("vacuum")
 
         if self.stop:
-            return False
+            return
 
         for vol in all_vols.values():
             if vol.flags["dbd"] == "acid":
@@ -1130,7 +1130,7 @@ class Up2k(object):
                 self.log("checkpoint failed: {}".format(ex), 3)
 
         if self.stop:
-            return False
+            return
 
         self.pp.end = True
 
@@ -2157,6 +2157,11 @@ class Up2k(object):
                             prefix="r,", dir=atop, delete=False
                         ).name
                         self._symlink(ap, ap2, vf, True, True, st.st_mtime)
+                        st1 = bos.stat(ap)
+                        st2 = bos.lstat(ap2)
+                        if st1.st_size != st2.st_size or stat.S_ISLNK(st2.st_mode):
+                            wunlink(self.log, ap2, vf)
+                            raise Exception("redup: clone failed; giving up")
                         wunlink(self.log, ap, vf)
                         bos.rename(ap2, ap)
 
@@ -2182,8 +2187,8 @@ class Up2k(object):
                     rd2, fn2 = hit
                     if fn == fn2 and rd == rd2 and vol is v2:
                         continue
+                    apt = ""
                     try:
-                        apt = ""
                         rd, fn = s3dec(rd, fn)
                         rd2, fn2 = s3dec(rd2, fn2)
                         fp1 = os.path.join(vol.realpath, rd, fn)
