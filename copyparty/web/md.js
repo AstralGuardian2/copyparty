@@ -526,23 +526,24 @@ if (sread('hidenav') == 1)
 if (window.tt && tt.init)
     tt.init();
 
-// page zoom
-(function () {
-    var step = 0.1, min = 0.6, max = 2;
 
-    function set_zoom(delta) {
-        var zoom = parseFloat(document.documentElement.style.zoom) || 1;
-        zoom = Math.min(max, Math.max(min, zoom + delta));
-        document.documentElement.style.zoom = zoom;
+// font size A-A+
+(function () {
+    var font_min = 10, font_max = 32, font_step = 1;
+
+    function set_fontsize(delta) {
+        var size = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        size = Math.max(font_min, Math.min(font_max, Math.round(size + delta)));
+        document.documentElement.style.fontSize = size + 'px';
         setTimeout(redraw);
     }
 
-    ebi('zoom_decrease').onclick = function () {
-        set_zoom(-step);
+    ebi('fontsize_increase').onclick = function () {
+        set_fontsize(font_step);
     };
 
-    ebi('zoom_increase').onclick = function () {
-        set_zoom(step);
+    ebi('fontsize_decrease').onclick = function () {
+        set_fontsize(-font_step);
     };
 })();
 

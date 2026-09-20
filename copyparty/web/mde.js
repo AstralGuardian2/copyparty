@@ -23,26 +23,27 @@ var dom_md = ebi('mt');
     dom_nav.innerHTML = nav.join('');
 })();
 
-var zoom_increase, zoom_decrease;
 
+// font size A-A+
+var fontsize_increase, fontsize_decrease;
 (function () {
-    var zoom_min = .5, zoom_max = 3, zoom_step = .2;
+    var font_min = 10, font_max = 32, font_step = 1;
 
-    function set_zoom(mde, delta) {
-        var zoom = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--zoom-scale')) || 1;
-        zoom = Math.max(zoom_min, Math.min(zoom_max, zoom + delta));
-        document.documentElement.style.setProperty('--zoom-scale', zoom);
-        setTimeout(function () {
-            mde.codemirror.refresh();
-        }, 0);
+    function set_fontsize(mde, delta) {
+        var size = parseInt(document.documentElement.style.getPropertyValue('--mde-font-size')) || 16;
+
+        size = Math.max(font_min, Math.min(font_max, Math.round(size + delta)));
+        document.documentElement.style.setProperty('--mde-font-size', size + 'px');
+
+        setTimeout(function () { mde.codemirror.refresh(); }, 0);
     }
 
-    zoom_increase = function (mde) {
-        set_zoom(mde, zoom_step);
+    fontsize_increase = function (mde) {
+        set_fontsize(mde, font_step);
     };
 
-    zoom_decrease = function (mde) {
-        set_zoom(mde, -zoom_step);
+    fontsize_decrease = function (mde) {
+        set_fontsize(mde, -font_step);
     };
 })();
 
@@ -60,14 +61,14 @@ var mde = (function () {
             action: save
         }, {
             name: "font-smaller",
-            title: "Zoom Decrease",
+            title: "Fontsize Decrease",
             text: "A−",
-            action: zoom_decrease
+            action: fontsize_decrease
         }, {
             name: "font-bigger",
-            title: "Zoom Increase",
+            title: "Fontsize Increase",
             text: "A+",
-            action: zoom_increase
+            action: fontsize_increase
         }, '|',
         'bold', 'italic', 'strikethrough', 'heading', '|',
         'code', 'quote', 'unordered-list', 'ordered-list', 'clean-block', '|',

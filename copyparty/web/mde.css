@@ -155,8 +155,9 @@ html.z .mdo {
 	background: #1c1c1c;
 }
 
-/* zoom adjustment */
+/* font size A-A+ */
 .EasyMDEContainer .CodeMirror,
 .mdo {
-	zoom: var(--zoom-scale, 1);
+	font-size: var(--mde-font-size, 1em);
+	line-height: 1.5;
 }
